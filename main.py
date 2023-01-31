@@ -29,7 +29,7 @@ def update(dt, boids):
         if event.type == QUIT:
             pg.quit()
             sys.exit(0)
-        elif event.type == KEYDOWN:
+        if event.type == KEYDOWN:
             mods = pg.key.get_mods()
             if event.key == pg.K_q:
                 # quit
@@ -80,6 +80,9 @@ def update(dt, boids):
                 num_boids = len(boids)
                 boids.empty()
                 add_boids(boids, num_boids)
+            elif event.key == pg.K_w:
+                for boid in boids:
+                    boid.can_wrap = not boid.can_wrap
 
     for b in boids:
         b.update(dt, boids)

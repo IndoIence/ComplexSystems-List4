@@ -15,6 +15,7 @@ class Boid(Vehicle):
     crowding = 15
     can_wrap = False
     edge_distance_pct = 5
+
     ###############
 
     def __init__(self):
