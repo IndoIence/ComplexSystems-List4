@@ -83,6 +83,11 @@ def update(dt, boids):
             elif event.key == pg.K_w:
                 for boid in boids:
                     boid.can_wrap = not boid.can_wrap
+                print(f"boundary conditions: {boids.sprites()[0].can_wrap}")
+            elif event.key == pg.K_b:
+                for boid in boids:
+                    boid.blind= not boid.blind
+                print(f"Blind backwards: {boids.sprites()[0].blind}")
 
     for b in boids:
         b.update(dt, boids)
@@ -113,8 +118,9 @@ def main(args):
 
     # Set up the window.
     logo = pg.image.load("logo32x32.png")
+    logo = pg.transform.scale(logo,(20,20))
     pg.display.set_icon(logo)
-    pg.display.set_caption("BOIDS!")
+    # pg.display.set_caption("BOIDS!")
     window_width, window_height = [int(x) for x in args.geometry.split("x")]
     flags = DOUBLEBUF
 

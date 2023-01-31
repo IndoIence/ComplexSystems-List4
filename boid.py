@@ -14,6 +14,7 @@ class Boid(Vehicle):
     perception = 60
     crowding = 15
     can_wrap = False
+    blind = True
     edge_distance_pct = 5
 
     ###############
@@ -65,6 +66,8 @@ class Boid(Vehicle):
         return steering / 100
 
     def update(self, dt, boids):
+        sequence = [self.separation, self.alignment, self.cohesion]
+
         steering = pg.Vector2()
 
         if not self.can_wrap:
@@ -73,16 +76,32 @@ class Boid(Vehicle):
         neighbors = self.get_neighbors(boids)
         if neighbors:
 
-            separation = self.separation(neighbors)
-            alignment = self.alignment(neighbors)
-            cohesion = self.cohesion(neighbors)
+            for command in sequence:
+                change = command(neighbors)
+                steering += change
+                super().update(dt/3, steering)
 
+            # separation = self.separation(neighbors)
+            # steering += separation
+            # super().update(dt/3, steering)
+            # alignment = self.alignment(neighbors)
+            # steering += alignment
+            # super().update(dt/3, steering)
+            # cohesion = self.cohesion(neighbors)
+            # steering += cohesion
+            # super().update(dt/3, steering)
+            return
+
+            # separation = self.separation(neighbors)
+            # alignment = self.alignment(neighbors)
+            # cohesion = self.cohesion(neighbors)
+            # steering += separation + alignment + cohesion
             # DEBUG
             # separation *= 0
             # alignment *= 0
             # cohesion *= 0
 
-            steering += separation + alignment + cohesion
+
 
         # steering = self.clamp_force(steering)
 
@@ -94,5 +113,12 @@ class Boid(Vehicle):
             if boid != self:
                 dist = self.position.distance_to(boid.position)
                 if dist < self.perception:
-                    neighbors.append(boid)
+                    if not self.blind:
+                        neighbors.append(boid)
+                    else:
+                        dot_pr = pg.Vector2.dot(self.velocity,(self.position - boid.position))
+                        if dot_pr > 0:
+                            neighbors.append(boid)
+
+
         return neighbors
