@@ -86,7 +86,7 @@ def update(dt, boids):
                 print(f"boundary conditions: {boids.sprites()[0].can_wrap}")
             elif event.key == pg.K_b:
                 for boid in boids:
-                    boid.blind= not boid.blind
+                    boid.blind = not boid.blind
                 print(f"Blind backwards: {boids.sprites()[0].blind}")
 
     for b in boids:
@@ -118,7 +118,7 @@ def main(args):
 
     # Set up the window.
     logo = pg.image.load("logo32x32.png")
-    logo = pg.transform.scale(logo,(20,20))
+    #logo = pg.transform.scale(logo, (1000, 1000))
     pg.display.set_icon(logo)
     # pg.display.set_caption("BOIDS!")
     window_width, window_height = [int(x) for x in args.geometry.split("x")]
@@ -134,7 +134,7 @@ def main(args):
     add_boids(boids, args.num_boids)
 
     # Main game loop.
-    dt = 1/fps  # dt is the time since last frame.
+    dt = 1 / fps  # dt is the time since last frame.
 
     # Loop forever!
     while True:
