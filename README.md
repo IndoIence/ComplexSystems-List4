@@ -1,5 +1,5 @@
 # Boids
-
+Original [repo from meznak](https://github.com/meznak/boids_py)
 This is an implementation of Craig Reynolds' [Boids](https://www.red3d.com/cwr/boids/) in python using pygame.
 
 ## Requirements
