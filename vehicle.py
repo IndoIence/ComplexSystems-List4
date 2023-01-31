@@ -3,9 +3,12 @@ import pygame as pg
 
 class Vehicle(pg.sprite.Sprite):
     # default image is a li'l white triangle
-    image = pg.Surface((10, 10), pg.SRCALPHA)
-    pg.draw.polygon(image, pg.Color('white'),
-                    [(15, 5), (0, 2), (0, 8)])
+    image = pg.Surface((25, 25), pg.SRCALPHA)
+    # poly_dim = [(15, 5), (0, 2), (0, 8)]
+    poly_dim = [(30, 0), (0, 1), (0, 16)]
+    # poly_dim = [(45, 15), (0, 1), (0, 15)]
+    print(poly_dim)
+    pg.draw.polygon(image, pg.Color('white'), poly_dim)
 
     def __init__(self, position, velocity, min_speed, max_speed,
                  max_force, can_wrap):

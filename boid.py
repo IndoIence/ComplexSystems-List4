@@ -13,7 +13,8 @@ class Boid(Vehicle):
     max_turn = 5
     perception = 60
     crowding = 15
-    can_wrap = False
+    can_wrap = True
+    blind = False
     edge_distance_pct = 5
 
     ###############
@@ -65,6 +66,14 @@ class Boid(Vehicle):
         return steering / 100
 
     def update(self, dt, boids):
+        sequence = [self.separation, self.alignment, self.cohesion]
+        # sequence = [self.alignment, self.separation, self.cohesion]
+        # sequence = [self.alignment, self.cohesion, self.separation]
+        # sequence = [self.cohesion, self.alignment,  self.separation]
+        # sequence = [ self.cohesion, self.separation, self.alignment]
+        # sequence = [self.separation, self.cohesion, self.alignment]
+
+
         steering = pg.Vector2()
 
         if not self.can_wrap:
@@ -73,16 +82,31 @@ class Boid(Vehicle):
         neighbors = self.get_neighbors(boids)
         if neighbors:
 
-            separation = self.separation(neighbors)
-            alignment = self.alignment(neighbors)
-            cohesion = self.cohesion(neighbors)
+            for command in sequence:
+                change = command(neighbors)
+                steering += change
+                super().update(dt/3, steering)
 
+            # separation = self.separation(neighbors)
+            # steering += separation
+            # super().update(dt/3, steering)
+            # alignment = self.alignment(neighbors)
+            # steering += alignment
+            # super().update(dt/3, steering)
+            # cohesion = self.cohesion(neighbors)
+            # steering += cohesion
+            # super().update(dt/3, steering)
+
+            return
+
+            # separation = self.separation(neighbors)
+            # alignment = self.alignment(neighbors)
+            # cohesion = self.cohesion(neighbors)*0
+            # steering += separation + alignment + cohesion
             # DEBUG
             # separation *= 0
             # alignment *= 0
             # cohesion *= 0
-
-            steering += separation + alignment + cohesion
 
         # steering = self.clamp_force(steering)
 
@@ -94,5 +118,11 @@ class Boid(Vehicle):
             if boid != self:
                 dist = self.position.distance_to(boid.position)
                 if dist < self.perception:
-                    neighbors.append(boid)
+                    if not self.blind:
+                        neighbors.append(boid)
+                    else:
+                        dot_pr = pg.Vector2.dot(self.velocity, (self.position - boid.position))
+                        # when dot product is negative then the self sees in the direction of the boid
+                        if dot_pr < 0:
+                            neighbors.append(boid)
         return neighbors
